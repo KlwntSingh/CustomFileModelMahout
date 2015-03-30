@@ -7,10 +7,14 @@ import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.impl.common.FastByIDMap;
 import org.apache.mahout.cf.taste.impl.common.LongPrimitiveIterator;
 import org.apache.mahout.cf.taste.impl.recommender.GenericItemBasedRecommender;
+import org.apache.mahout.cf.taste.impl.recommender.GenericUserBasedRecommender;
+import org.apache.mahout.cf.taste.impl.similarity.EuclideanDistanceSimilarity;
 import org.apache.mahout.cf.taste.impl.similarity.TanimotoCoefficientSimilarity;
 import org.apache.mahout.cf.taste.model.DataModel;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
+import org.apache.mahout.cf.taste.similarity.UserSimilarity;
+import org.apache.mahout.math.hadoop.similarity.cooccurrence.measures.PearsonCorrelationSimilarity;
 
 import com.mahout.rnd.customFileModel.PaxcomFileDataModel;
 import com.mahout.rnd.customFileModel.retrieveDataFromIndex;
@@ -41,7 +45,9 @@ public class RecommendationEngine {
 			 dataretriever = new retrieveDataFromIndex(((PaxcomFileDataModel) dataModel).getIndexedMapInstansce());
 			 
 //			ItemSimilarity sim = new LogLikelihoodSimilarity(dm);
+			UserSimilarity us =  new EuclideanDistanceSimilarity(dataModel);
 			ItemSimilarity sim = new TanimotoCoefficientSimilarity(dataModel);
+			GenericUserBasedRecommender ubr = new GenericUserBasedRecommender(dataModel, null, us);
 			final GenericItemBasedRecommender recommender = new GenericItemBasedRecommender(dataModel, (ItemSimilarity) sim);
 			
 			
